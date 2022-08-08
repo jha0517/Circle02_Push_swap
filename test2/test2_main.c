@@ -14,70 +14,69 @@ int	ft_str_is_numeric(char *str)
 	return (1);
 }
 
-int	ft_arg_strlen(char **av, int n)
+int ft_check_arg_error(t_list *stack, char **av, int n)
 {
-	int	len;
 	int	i;
+	int	j;
 
-	len = 0;
 	i = 0;
 	while (++i < n)
-		len += ft_strlen(av[i]);
-	return (len);
-}
-
-int doublon(int *array, int count)
-{
-	for (int i = 0; i < count - 1; i++) 
-	{ 
-		// printf("1 : array[%i] (i)\n", i);
-		for (int j = i + 1; j < count; j++) 
+	{
+		if (!ft_str_is_numeric(av[i]))
+			return (ft_non_numeric_input_error());
+		if (ft_atoi(av[i]) == -1 || ft_atoi(av[i]) == 0)
 		{
-			// printf("2 : array[%i] (i), array[%i] (j)\n", i, j);
-			if (array[i] == array[j]) 
-			{
-				return (1);
-			}
-    	}
+			if (ft_strncmp(av[i], "-1", 2) && ft_atoi(av[i])==-1)
+				return (ft_int_range_input_error());
+			if (ft_strncmp(av[i], "0", 1) && ft_atoi(av[i])==0)
+				return (ft_int_range_input_error());
+		}
+	}
+	i = 0;
+	while (++i < n)
+	{
+		j = i;
+		while (++j < n)
+		{
+			if (ft_atoi(av[i]) == ft_atoi(av[j]))
+				return (ft_arg_doublon_error());
+		}
 	}
 	return (0);
 }
 
-int ft_stock_arg_in_stack(t_list *stack, char **av, int n)
+t_list *ft_stock_arg_in_stack(t_list *stack, char **av, int n)
 {
 	int	i;
-	int	total_len;
-	t_list	*tmp;
-	char	*arguments;
 
-	// total_len = ft_arg_strlen(av, n);
-	// arguments = (char *)malloc(total_len * sizeof(char) + 1);
-	// arguments[total_len] = '\0';
-	// i = 0;
-	// while (++i < n)
 	i = 0;
-	while ( ++i < n)
+	while (++i < n)
 	{
-		arguments[ft_strlen(av[i])] = '\0';
-		if (!ft_str_is_numeric(av[i]))
-			return (ft_non_numeric_input_error(stack));
-		// if (ft_check_doublon(arg, av[i]))
-			// return (ft_arg_doublon_error());
+		printf("%s\n",av[i]);
 		if (i == 1)
 			stack = ft_lstnew(ft_atoi(av[i]));
 		else
 			ft_lstadd_back(&(stack), ft_lstnew(ft_atoi(av[i])));
 	}
-	return (1);
+	return (stack);
 }
 
-void pb(t_list *head_a, t_list *head_b)
+t_list *pb(t_list *head_a, t_list *head_b)
 {
-	printf("head_b %p\n", head_b);
-	if (!head_b)
+	t_list *tmp;
+	t_list *b;
+
+	tmp = head_b->next;	
+	if (tmp)
 	{
-		printf("head_b est NULL\n");
+		printf("head_b exist, print %p\n", tmp);
 	}
+	else
+	{
+		printf("head_b doesn't exist\n");
+		b = ft_lstnew(0);
+	}
+	return (b);
 }
 
 int main(int ac, char **av)
@@ -88,11 +87,12 @@ int main(int ac, char **av)
 
 	if (ac == 1)
 		return (0);
-	if (!ft_stock_arg_in_stack(a, av, ac))
+	if (ft_check_arg_error(a, av, ac))
 		return (0);
-	printf("size is %i\n", ft_lstsize(a));
-	// pb(a,  b);
-	// show_list(a, b->head);;
+	a = ft_stock_arg_in_stack(a, av, ac);
+	b = ft_lstnew(0);
+	// pb(a, b);
+	show_list(a, b);;
 	return (0);
 }
 
