@@ -4,6 +4,8 @@
 
 Push Swap is a project that requires the sorting of a stack of numbers using two stacks with a set of defined operations. The goal is to sort the stack in the least amount of moves possible. The project has two programs: push_swap, which outputs the set of operations to sort the stack, and checker, which checks if the set of operations sorts the stack correctly.
 
+![](image.png)
+
 ## Installation
 
 1. Clone the repository: `git clone <https://github.com/><username>/push_swap.git`
